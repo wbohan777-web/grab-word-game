@@ -470,16 +470,14 @@ function serveStatic(req, res) {
 }
 
 const server = http.createServer((req, res) => {
-  // API 路由优先处理
-  if (req.url.startsWith('/api/')) {
-    return api.handleAPI(req, res);
-  }
-  
+  // 健康检查（必须最先，供 UptimeRobot 保活）
   if (req.url === '/healthz') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true, rooms: rooms.size, words: WORDS.length }));
     return;
   }
+
+  // /api/config 由本服务自己处理，必须在通用 API 路由之前
   if (req.url === '/api/config' || req.url === '/config') {
     if (req.method === 'POST') {
       let body = '';
@@ -502,6 +500,12 @@ const server = http.createServer((req, res) => {
     }));
     return;
   }
+
+  // 其余 /api/* 交给 API 路由（认证、排行榜、错词本等）
+  if (req.url.startsWith('/api/')) {
+    return api.handleAPI(req, res);
+  }
+
   serveStatic(req, res);
 });
 
