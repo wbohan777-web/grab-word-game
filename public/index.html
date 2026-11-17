@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050814">
+<meta name="description" content="多人实时抢词对战游戏 - 霓虹竞技场">
+<title>抢词 · 占领战</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<nav class="navbar" id="navbar" style="display:none">
+  <div class="nav-left">
+    <span class="nav-logo">抢词房</span>
+  </div>
+  <div class="nav-center">
+    <a href="/" class="nav-link active">游戏</a>
+    <a href="/leaderboard.html" class="nav-link">排行榜</a>
+    <a href="/words.html" class="nav-link">错词本</a>
+    <a href="/profile.html" class="nav-link">我的</a>
+  </div>
+  <div class="nav-right">
+    <div class="user-info" id="user-info">
+      <img class="user-avatar" id="user-avatar" src="" alt="">
+      <div class="user-details">
+        <div class="user-name" id="user-name">--</div>
+        <div class="user-rank" id="user-rank">--</div>
+      </div>
+    </div>
+    <button class="btn-logout" id="btn-logout">退出</button>
+  </div>
+</nav>
+
+<!-- 游客提示条 -->
+<div class="guest-banner" id="guest-banner" style="display:none">
+  <span>🎮 游客模式：<a href="/login.html">登录</a>后可保存战绩、段位排名</span>
+</div>
+
+<div class="wrap">
+
+  <!-- 登录界面 -->
+  <section id="v-login">
+    <div class="card">
+      <label>你的名字</label>
+      <input id="nm" maxlength="12" placeholder="随便起" enterkeyhint="go" autocomplete="off">
+      <div style="height:14px"></div>
+      <div class="row">
+        <button class="ghost" id="btn-duel">开 1v1</button>
+        <button id="btn-brawl">开混战</button>
+      </div>
+      <p class="sub" id="join-hint" style="display:none"></p>
+      <div style="height:12px"></div>
+      <button id="btn-join" class="ghost" style="display:none">进入房间</button>
+    </div>
+  </section>
+
+  <!-- 房间大厅 -->
+  <section id="v-room" class="hide">
+    <div class="card">
+      <div class="code" id="room-code">----</div>
+      <p class="sub">点下面按钮，把带房码的链接发群里</p>
+      <div style="height:12px"></div>
+      <button id="btn-share">📋 复制邀请链接</button>
+    </div>
+    <div class="card">
+      <div id="players"></div>
+    </div>
+    <button id="btn-start">🎮 开始（20 格占领战）</button>
+    <p class="sub" id="wait-hint"></p>
+  </section>
+
+  <!-- 对局进行中 -->
+  <section id="v-play" class="hide" style="flex:1;display:flex;flex-direction:column;gap:12px">
+    <div class="bar" id="scores"></div>
+    <div id="board"></div>
+    <p class="sub" id="remain"></p>
+  </section>
+
+  <!-- 结算页面 -->
+  <section id="v-over" class="hide">
+    <div class="card">
+      <div id="podium"></div>
+    </div>
+    <button id="btn-again">🔄 再来一局</button>
+  </section>
+
+</div>
+
+<!-- 答题弹窗 -->
+<div id="modal" class="hide">
+  <div class="box">
+    <div id="m-steal" class="steal-badge">⚡ 翻盘 · 抢回这一格</div>
+    <div id="m-word">—</div>
+    <div id="m-ipa"></div>
+    <div id="m-opts"></div>
+  </div>
+</div>
+
+<!-- 特效层 -->
+<div id="flash"></div>
+<canvas id="trail"></canvas>
+<div class="toast" id="toast"></div>
+
+<script src="auth.js"></script>
+<script src="game.js"></script>
+<script>
+// 初始化用户界面
+(function initUI() {
+  const navbar = document.getElementById('navbar');
+  const guestBanner = document.getElementById('guest-banner');
+  const userInfo = document.getElementById('user-info');
+  const userName = document.getElementById('user-name');
+  const userRank = document.getElementById('user-rank');
+  const userAvatar = document.getElementById('user-avatar');
+  const btnLogout = document.getElementById('btn-logout');
+  
+  if (api.isLoggedIn() && AUTH.user) {
+    // 已登录：显示导航栏
+    navbar.style.display = 'flex';
+    userName.textContent = AUTH.user.username;
+    userRank.textContent = AUTH.user.rank;
+    userAvatar.src = AUTH.user.avatar;
+    
+    // 异步更新最新资料
+    api.getProfile().then(profile => {
+      userName.textContent = profile.username;
+      userRank.textContent = profile.rank;
+      userAvatar.src = profile.avatar;
+      AUTH.user = profile;
+    }).catch(() => {});
+  } else {
+    // 游客模式：显示提示条
+    guestBanner.style.display = 'block';
+  }
+  
+  // 退出登录
+  btnLogout.addEventListener('click', () => {
+    if (confirm('确定退出登录？')) {
+      api.logout();
+    }
+  });
+})();
+</script>
+</body>
+</html>

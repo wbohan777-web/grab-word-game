@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#050814">
+<title>登录 · 抢词房</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: linear-gradient(135deg, rgba(15,21,57,0.95), rgba(8,14,40,0.95));
+  border: 1px solid rgba(56,189,248,0.3);
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8),
+              0 0 40px rgba(56,189,248,0.15),
+              inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.auth-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #22d3ee, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.auth-subtitle {
+  text-align: center;
+  color: rgba(238,243,255,0.6);
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+.input-group {
+  margin-bottom: 20px;
+}
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(238,243,255,0.9);
+  font-size: 14px;
+  font-weight: 500;
+}
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(56,189,248,0.3);
+  border-radius: 10px;
+  background: rgba(30,42,85,0.5);
+  color: #eef3ff;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+.input-group input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  background: rgba(30,42,85,0.8);
+  box-shadow: 0 0 20px rgba(56,189,248,0.3);
+}
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #22d3ee, #38bdf8);
+  color: #050814;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(56,189,248,0.5);
+}
+.btn-secondary {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid rgba(56,189,248,0.5);
+  border-radius: 10px;
+  background: transparent;
+  color: #38bdf8;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+.btn-secondary:hover {
+  background: rgba(56,189,248,0.1);
+  border-color: #38bdf8;
+}
+.switch-mode {
+  text-align: center;
+  margin-top: 20px;
+  color: rgba(238,243,255,0.6);
+  font-size: 14px;
+}
+.switch-mode a {
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+.switch-mode a:hover {
+  text-decoration: underline;
+}
+.error-msg {
+  background: rgba(239,68,68,0.2);
+  border: 1px solid rgba(239,68,68,0.5);
+  color: #fca5a5;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  display: none;
+}
+.success-msg {
+  background: rgba(34,197,94,0.2);
+  border: 1px solid rgba(34,197,94,0.5);
+  color: #86efac;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  display: none;
+}
+.guest-link {
+  text-align: center;
+  margin-top: 20px;
+}
+.guest-link a {
+  color: rgba(238,243,255,0.6);
+  text-decoration: none;
+  font-size: 14px;
+}
+.guest-link a:hover {
+  color: #38bdf8;
+}
+</style>
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-title">抢词房</h1>
+    <p class="auth-subtitle">竞技学习 · 快乐成长</p>
+    
+    <div class="error-msg" id="error"></div>
+    <div class="success-msg" id="success"></div>
+    
+    <!-- 登录表单 -->
+    <form id="login-form" style="display: block;">
+      <div class="input-group">
+        <label>用户名</label>
+        <input type="text" id="login-username" placeholder="请输入用户名" autocomplete="username" required>
+      </div>
+      <div class="input-group">
+        <label>密码</label>
+        <input type="password" id="login-password" placeholder="请输入密码" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-primary">登录</button>
+      <div class="switch-mode">
+        还没有账号？<a id="show-register">立即注册</a>
+      </div>
+    </form>
+    
+    <!-- 注册表单 -->
+    <form id="register-form" style="display: none;">
+      <div class="input-group">
+        <label>用户名 (3-20字符)</label>
+        <input type="text" id="register-username" placeholder="请输入用户名" autocomplete="username" required minlength="3" maxlength="20">
+      </div>
+      <div class="input-group">
+        <label>密码 (至少6位)</label>
+        <input type="password" id="register-password" placeholder="请输入密码" autocomplete="new-password" required minlength="6">
+      </div>
+      <div class="input-group">
+        <label>邮箱 (可选)</label>
+        <input type="email" id="register-email" placeholder="用于找回密码" autocomplete="email">
+      </div>
+      <button type="submit" class="btn-primary">注册</button>
+      <div class="switch-mode">
+        已有账号？<a id="show-login">去登录</a>
+      </div>
+    </form>
+    
+    <div class="guest-link">
+      <a href="/">继续游客模式</a>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+const loginForm = $('#login-form');
+const registerForm = $('#register-form');
+const errorEl = $('#error');
+const successEl = $('#success');
+
+// 显示错误
+function showError(msg) {
+  errorEl.textContent = msg;
+  errorEl.style.display = 'block';
+  successEl.style.display = 'none';
+  setTimeout(() => { errorEl.style.display = 'none'; }, 5000);
+}
+
+// 显示成功
+function showSuccess(msg) {
+  successEl.textContent = msg;
+  successEl.style.display = 'block';
+  errorEl.style.display = 'none';
+}
+
+// 切换到注册
+$('#show-register').addEventListener('click', () => {
+  loginForm.style.display = 'none';
+  registerForm.style.display = 'block';
+  errorEl.style.display = 'none';
+  successEl.style.display = 'none';
+});
+
+// 切换到登录
+$('#show-login').addEventListener('click', () => {
+  registerForm.style.display = 'none';
+  loginForm.style.display = 'block';
+  errorEl.style.display = 'none';
+  successEl.style.display = 'none';
+});
+
+// 登录
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = $('#login-username').value.trim();
+  const password = $('#login-password').value;
+  
+  if (!username || !password) {
+    return showError('请填写用户名和密码');
+  }
+  
+  try {
+    await api.login(username, password);
+    showSuccess('登录成功！正在跳转...');
+    setTimeout(() => { location.href = '/'; }, 1000);
+  } catch (err) {
+    showError(err.message || '登录失败');
+  }
+});
+
+// 注册
+registerForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = $('#register-username').value.trim();
+  const password = $('#register-password').value;
+  const email = $('#register-email').value.trim() || null;
+  
+  if (!username || !password) {
+    return showError('请填写用户名和密码');
+  }
+  
+  if (username.length < 3 || username.length > 20) {
+    return showError('用户名必须为 3-20 个字符');
+  }
+  
+  if (password.length < 6) {
+    return showError('密码至少 6 位');
+  }
+  
+  try {
+    await api.register(username, password, email);
+    showSuccess('注册成功！正在跳转...');
+    setTimeout(() => { location.href = '/'; }, 1000);
+  } catch (err) {
+    showError(err.message || '注册失败');
+  }
+});
+
+// 如果已登录，直接跳转
+if (api.isLoggedIn()) {
+  location.href = '/';
+}
+</script>
+
+</body>
+</html>

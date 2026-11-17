@@ -1,0 +1,57 @@
+# ===== 依赖 =====
+node_modules/
+npm-debug.log*
+package-lock.json.bak
+
+# ===== 日志 =====
+*.log
+logs/
+launch.out
+
+# ===== 大文件 / 逆向参考资料（不入库）=====
+samples/
+*.apk
+*.zip
+tools/effects.jpg
+tools/ocr-result.txt
+
+# ===== 逆向分析临时产物 =====
+_bbfields2.txt
+_bbmodels.txt
+_commands.txt
+_fights.txt
+_gameplay.txt
+_gridfields.txt
+_js_scan.txt
+_pkclasses.txt
+_pkfiltered.txt
+_pk_hunt.txt
+_srcfiles.txt
+_zhanling.txt
+public/_ids.txt
+
+# ===== 环境与密钥 =====
+.env
+.env.local
+*.pem
+*.key
+
+# ===== 编辑器 / 系统 =====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# ===== 临时 =====
+*.tmp
+*.temp
+coverage/
+.nyc_output/
+
+# ===== 部署产物 =====
+grab-game-deploy.zip
+*.tgz
